@@ -49,13 +49,12 @@ skills_df = spark.read \
 join_df = job_skills_df.join(
     other = broadcast(skills_df),
     on = ['skill_abr'],
-    how = 'semi'
-)
+    how = 'inner'
+).select('job_id','skill_name')
 
 group_df = join_df.groupBy('skill_name').agg(count('job_id').alias('job_count'))
 
-select_df = group_df.select('skill_name', 'job_count')
-select_df = select_df.orderBy('job_count')
+select_df = group_df.orderBy('job_count', ascending = False)
 print(select_df.show())
 print(select_df.count())
 
