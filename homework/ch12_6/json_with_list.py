@@ -36,11 +36,14 @@ def for_each_batch_func(df: DataFrame, epoch_id):
     print(f'from_json_df.show()')
     from_json_df.show(truncate=False)
 
-    json_to_col_df = from_json_df.select('person_info.*', explode('hobbies')) \
-                                 .selectExpr('name',
-                                             'address.*',
-                                             'CAST(age AS INT) AS age ',
-                                             'hobbies')
+    json_to_col_df = from_json_df.select('person_info.*') \
+            .withColumn("hobbies", explode(col("hobbies"))) \
+            .select(
+                "name",
+                "address.*", # 여기서는 address를 다시 펼쳐도 됩니다.
+                "age",
+                "hobbies"
+            )
     print(f'json_to_col_df.show()')
     json_to_col_df.show(truncate=False)
 
