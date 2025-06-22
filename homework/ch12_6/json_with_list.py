@@ -25,22 +25,35 @@ def for_each_batch_func(df: DataFrame, epoch_id):
 
     df.show(truncate=False)
 
-    json_to_col_df = df.select(
+    from_json_df = df.select(
         from_json(col('VALUE'), schema).alias('person_info')
-    ).select('person_info.*') \
-     .selectExpr('name',
-                 'address.*',
-                 'CAST(age AS INT) AS age',
-                 'hobbies')
+    )
 
+    from_json_df.printSchema()
+    json_schema = from_json_df.schema
+    print(json_schema)
+
+    print(f'from_json_df.show()')
+    from_json_df.show(truncate=False)
+
+    json_to_col_df = from_json_df.select('person_info.*') \
+                                    .selectExpr(
+                                        'name',
+                                            'address.*',
+                                            'CAST(age AS INT) AS age',
+                                            'hobbies'
+                                    )
     print(f'json_to_col_df.show()')
     json_to_col_df.show(truncate=False)
-    exploded_df = json_to_col_df.select('name',
+
+
+    exploded_df = json_to_col_df.select(
+                                        'name',
                                         'country',
                                         'city',
                                         'age',
                                         explode(col('hobbies')).alias('hobbies')
-    )
+            )
     print(f'exploded_df.show()')
     exploded_df.show(truncate=False)
 
