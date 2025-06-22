@@ -25,27 +25,24 @@ def for_each_batch_func(df: DataFrame, epoch_id):
 
     df.show(truncate=False)
 
-    from_json_df = df.select(
+    json_to_col_df = df.select(
         from_json(col('VALUE'), schema).alias('person_info')
-    )
+    ).select('person_info.*') \
+     .selectExpr('name',
+                 'address.*',
+                 'CAST(age AS INT) AS age',
+                 'hobbies')
 
-    from_json_df.printSchema()
-    json_schema = from_json_df.schema
-    print(json_schema)
-
-    print(f'from_json_df.show()')
-    from_json_df.show(truncate=False)
-
-    json_to_col_df = from_json_df.select('person_info.*') \
-            .withColumn("hobbies", explode(col("hobbies"))) \
-            .select(
-                "name",
-                "address.*", # 여기서는 address를 다시 펼쳐도 됩니다.
-                "age",
-                "hobbies"
-            )
     print(f'json_to_col_df.show()')
     json_to_col_df.show(truncate=False)
+    exploded_df = json_to_col_df.select('name',
+                                        'country',
+                                        'city',
+                                        'age',
+                                        explode(col('hobbies')).alias('hobbies')
+    )
+    print(f'exploded_df.show()')
+    exploded_df.show(truncate=False)
 
 
     df.unpersist()
