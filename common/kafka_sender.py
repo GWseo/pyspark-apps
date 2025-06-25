@@ -9,6 +9,6 @@ def send_to_kafka_json_payload(df: DataFrame, key_col_lst: list, val_col_lst: li
                     )
 
     df2.write.format('kafka') \
-        .option('kafka.bootstrap.server','kafka01:9092,kafka02:9092,kafka03:9092') \
+            .option("kafka.bootstrap.servers", "kafka01:9092,kafka02:9092,kafka03:9092") \
         .option('topic',topic_nm) \
         .save()
