@@ -50,5 +50,5 @@ class TumblingWindow(BaseStreamApp):
         time.sleep(10)
 
 if __name__ == '__main__':
-    tumbling_window = TumblingWindow(app_name='tumbling_window')
+    tumbling_window = TumblingWindow(app_name='sliding_window')
     tumbling_window.main()
