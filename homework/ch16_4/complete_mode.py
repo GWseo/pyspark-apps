@@ -3,6 +3,7 @@ from pyspark.sql.dataframe import DataFrame
 from pyspark.sql.functions import from_json, col, explode
 from pyspark.sql.types import StructType, StructField, ArrayType, StringType
 from pyspark.sql import SparkSession
+import time
 
 
 class UpdateMode(BaseStreamApp):
@@ -41,6 +42,7 @@ class UpdateMode(BaseStreamApp):
 
     def _for_each_batch(self, df: DataFrame, epoch_id: int, spark: SparkSession):
         df.show(truncate=False)
+        time.sleep(10)
 
 
 if __name__ == '__main__':
