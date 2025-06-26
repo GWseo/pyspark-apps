@@ -39,7 +39,7 @@ class TumblingWindow(BaseStreamApp):
 
         query = df.writeStream \
                 .foreachBatch(lambda df, epoch: self.for_each_batch(df, epoch, spark)) \
-                .outputMode('complete') \
+                .outputMode('update') \
                 .option("checkpointLocation", self.kafka_offset_dir) \
                 .start()
 
